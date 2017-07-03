@@ -43,14 +43,16 @@ class pdb_filter_lines( object ):
         return 
 
     def show_line( self, in_line ):
-        """Find and return matches according to input option flags"""
-        # common lists to filter lines (e.g. standard twenty 3-letter amino acid codes)
+        """Find and return matches according to input option flags."""
+
+        # common lists to filter lines (e.g. standard 3-letter amino acid and water codes)
         aa_list = [ 'ALA', 'CYS', 'ASP', 'GLU', 'PHE', 
                     'GLY', 'HIS', 'ILE', 'LYS', 'LEU', 
                     'MET', 'PRO', 'ARG', 'GLN', 'ASN',
                     'SER', 'THR', 'TRP', 'TYR', 'VAL' ]
         water_list =  [ 'HOH', 'WAT', 'H2O', 'TP3', 'TP5' ]
 
+        # check line against option flags
         if not self.noatom and in_line[0:4] == 'ATOM':
             if self.onlystandard and not in_line[17:20] in aa_list:
                 return False
