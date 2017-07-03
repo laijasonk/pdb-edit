@@ -12,6 +12,7 @@ class pdb_atom_hetatm_only( object ):
         """The class constructor."""
         self.pdb = args.pdb if args is not None else None
         self.noatom = args.noatom if args is not None else None
+        self.onlystandard = args.onlystandard if args is not None else None
         self.hetatm = args.hetatm if args is not None else None
         self.ter = args.ter if args is not None else None
         self.end = args.end if args is not None else None
@@ -24,6 +25,7 @@ class pdb_atom_hetatm_only( object ):
         if self.pdb is None:
             raise ValueError( 'Missing input PDB.' )
         if self.noatom is None: self.noatom = False
+        if self.onlystandard is None: self.onlystandard = False
         if self.hetatm is None: self.hetatm = False
         if self.ter is None: self.ter = False
         if self.end is None: self.end = False
@@ -32,28 +34,45 @@ class pdb_atom_hetatm_only( object ):
 
         with open( self.pdb, 'r' ) as pdb_handle:
             for line in pdb_handle:
-                if not self.noatom and line[0:4] == 'ATOM':
-                    print( line.strip() )
-                elif self.hetatm and line[0:6] == 'HETATM':
-                    print( line.strip() )
-                elif self.ter and line[0:3] == 'TER':
-                    print( line.strip() )
-                elif self.end and line[0:3] == 'END':
-                    print( line.strip() )
-                elif self.model and ( line[0:5] == 'MODEL' or line[0:6] == 'ENDMDL' ):
-                    print( line.strip() )
-                elif self.water and ( line[17:20] == 'HOH' or line[17:20] == 'WAT' 
-                                   or line[17:20] == 'H2O' or line[17:20] == 'TP3' ):
+                if self.show_line( line ):
                     print( line.strip() )
                 else:
-                    pass # ignoring all other lines
+                    pass # line does adhere to option flags
 
         return 
+
+    def show_line( self, in_line ):
+        """Find and return matches according to input option flags"""
+
+        water_list =  [ 'HOH', 'WAT', 'H2O', 'TP3', 'TP5' ]
+        aa_list = [ 'ALA', 'CYS', 'ASP', 'GLU', 'PHE', 
+                    'GLY', 'HIS', 'ILE', 'LYS', 'LEU', 
+                    'MET', 'PRO', 'ARG', 'GLN', 'ASN',
+                    'SER', 'THR', 'TRP', 'TYR', 'VAL', ]
+
+        if not self.noatom and in_line[0:4] == 'ATOM':
+            if self.onlystandard and not in_line[17:20] in aa_list:
+                return False
+            else:
+                return in_line
+        elif self.hetatm and in_line[0:6] == 'HETATM':
+            return in_line
+        elif self.ter and in_line[0:3] == 'TER':
+            return in_line
+        elif self.end and in_line[0:3] == 'END':
+            return in_line
+        elif self.model and ( in_line[0:5] == 'MODEL' or in_line[0:6] == 'ENDMDL' ):
+            return in_line
+        elif self.water and in_line[17:20] in water_list:
+            return in_line
+        else:
+            return False # do not show non-matching lines
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser( description=__doc__ )
     parser.add_argument( '-p', '--pdb', dest='pdb', required=True, help='input pdb file (including path if necessary)', type=str )
     parser.add_argument( '-na', '--noatom', dest='noatom', required=False, help='hide ATOM lines', default=False, action='store_true' )
+    parser.add_argument( '-aa', '--onlystandard', dest='onlystandard', required=False, help='show only standard 20 amino acid ATOMs', default=False, action='store_true' )
     parser.add_argument( '-he', '--hetatm', dest='hetatm', required=False, help='show HETATM lines', default=False, action='store_true' )
     parser.add_argument( '-t', '--ter', dest='ter', required=False, help='show TER lines', default=False, action='store_true' )
     parser.add_argument( '-e', '--end', dest='end', required=False, help='show END lines', default=False, action='store_true' )
