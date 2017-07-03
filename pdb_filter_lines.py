@@ -1,13 +1,13 @@
 #!/usr/bin/env python3.4
 
-"""Filter common types of coordinate lines in the PDB."""
+"""Filter common types of coordinate lines in the PDB according to specified options."""
 
 import argparse
 
 __author__ = 'Jason K Lai'
 __contact__ = 'http://www.jasonlai.com/'
 
-class pdb_atom_hetatm_only( object ):
+class pdb_filter_lines( object ):
     def __init__( self, args=None ):
         """The class constructor."""
         self.pdb = args.pdb if args is not None else None
@@ -32,23 +32,24 @@ class pdb_atom_hetatm_only( object ):
         if self.model is None: self.model = False
         if self.water is None: self.water = False
 
+        # handle the input PDB file and only show lines that pass filter
         with open( self.pdb, 'r' ) as pdb_handle:
             for line in pdb_handle:
                 if self.show_line( line ):
                     print( line.strip() )
                 else:
-                    pass # line does adhere to option flags
+                    pass # line does adhere to option flag filters
 
         return 
 
     def show_line( self, in_line ):
         """Find and return matches according to input option flags"""
-
-        water_list =  [ 'HOH', 'WAT', 'H2O', 'TP3', 'TP5' ]
+        # common lists to filter lines (e.g. standard twenty 3-letter amino acid codes)
         aa_list = [ 'ALA', 'CYS', 'ASP', 'GLU', 'PHE', 
                     'GLY', 'HIS', 'ILE', 'LYS', 'LEU', 
                     'MET', 'PRO', 'ARG', 'GLN', 'ASN',
-                    'SER', 'THR', 'TRP', 'TYR', 'VAL', ]
+                    'SER', 'THR', 'TRP', 'TYR', 'VAL' ]
+        water_list =  [ 'HOH', 'WAT', 'H2O', 'TP3', 'TP5' ]
 
         if not self.noatom and in_line[0:4] == 'ATOM':
             if self.onlystandard and not in_line[17:20] in aa_list:
@@ -70,13 +71,17 @@ class pdb_atom_hetatm_only( object ):
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser( description=__doc__ )
+
+    # command line option flags
     parser.add_argument( '-p', '--pdb', dest='pdb', required=True, help='input pdb file (including path if necessary)', type=str )
     parser.add_argument( '-na', '--noatom', dest='noatom', required=False, help='hide ATOM lines', default=False, action='store_true' )
-    parser.add_argument( '-aa', '--onlystandard', dest='onlystandard', required=False, help='show only standard 20 amino acid ATOMs', default=False, action='store_true' )
+    parser.add_argument( '-aa', '--onlystandard', dest='onlystandard', required=False, help='show only standard twenty amino acid', default=False, action='store_true' )
     parser.add_argument( '-he', '--hetatm', dest='hetatm', required=False, help='show HETATM lines', default=False, action='store_true' )
     parser.add_argument( '-t', '--ter', dest='ter', required=False, help='show TER lines', default=False, action='store_true' )
     parser.add_argument( '-e', '--end', dest='end', required=False, help='show END lines', default=False, action='store_true' )
     parser.add_argument( '-m', '--model', dest='model', required=False, help='show MODEL lines', default=False, action='store_true' )
     parser.add_argument( '-w', '--water', dest='water', required=False, help='show water lines', default=False, action='store_true' )
-    main = pdb_atom_hetatm_only( args=parser.parse_args() )
+
+    # command line execution
+    main = pdb_filter_lines( args=parser.parse_args() )
     main.run()

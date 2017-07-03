@@ -52,7 +52,11 @@ class pdb_keep_only_specified_chains( object ):
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser( description=__doc__ )
+
+    # command line option flags
     parser.add_argument( '-p', '--pdb', dest='pdb', required=True, help='input pdb file (including path if necessary)', type=str )
     parser.add_argument( '-c', '--chains', dest='chains', required=True, help='string of all chain identifiers to keep (e.g. "ADF")', type=str )
+
+    # command line execution
     main = pdb_keep_only_specified_chains( args=parser.parse_args() )
     main.run()

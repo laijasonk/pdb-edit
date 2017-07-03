@@ -45,7 +45,11 @@ class pdb_change_all_chains( object ):
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser( description=__doc__ )
+
+    # command line option flags
     parser.add_argument( '-p', '--pdb', dest='pdb', required=True, help='input pdb file (including path if necessary)', type=str )
     parser.add_argument( '-c', '--chain', dest='chain', required=True, help='single character chain identifier', type=str )
+
+    # command line execution
     main = pdb_change_all_chains( args=parser.parse_args() )
     main.run()
