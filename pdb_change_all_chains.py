@@ -15,10 +15,13 @@ class pdb_change_all_chains( object ):
 
         self.pdb = args.pdb if args is not None else None
         self.chain = args.chain if args is not None else None
+
         return
 
     def run( self ):
+
         """The main function."""
+
         if self.pdb is None:
             raise ValueError( 'Missing input PDB.' )
         if self.chain is None:
@@ -26,6 +29,7 @@ class pdb_change_all_chains( object ):
         if len( self.chain ) > 1:
             raise ValueError( 'Chain identifier must be a single character.' )
 
+        # loop through input pdb line by line and change the chain of ATOM/HETATM lines 
         with open( self.pdb, 'r' ) as pdb_handle:
             for line in pdb_handle:
                 if line[0:4] == 'ATOM' or line[0:6] == 'HETATM':
@@ -36,7 +40,9 @@ class pdb_change_all_chains( object ):
         return 
     
     def force_line_to_chain( self, in_line, in_chain ):
+
         """Force input line to be chain."""
+
         out_line = ''
         try:
             # standard PDB syntax has the chain on column 22
@@ -47,6 +53,7 @@ class pdb_change_all_chains( object ):
         return out_line
     
 if __name__ == '__main__':
+
     parser = argparse.ArgumentParser( description=__doc__ )
 
     # command line option flags
