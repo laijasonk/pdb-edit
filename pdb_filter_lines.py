@@ -21,6 +21,7 @@ class pdb_filter_lines( object ):
         self.end = args.end if args is not None else None
         self.model = args.model if args is not None else None
         self.water = args.water if args is not None else None
+
         return
 
     def run( self ):

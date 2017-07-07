@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.7
 
-"""Output amino acid residues (not HETATM) with at least one atom around the input xyz coordinates."""
+"""Output amino acid residues (not HETATM) with at least one heavy atom around the input xyz coordinates."""
 
 import argparse, sys, math
 
@@ -31,18 +31,22 @@ class pdb_sphere_neighbors( object ):
             raise ValueError( 'Incomplete XYZ coordinates.' )
         if self.threshold is None: self.threshold = 8
 
+        # parse input pdb into a Python list with one atom per element
         try:
             pdb_list = self.pdb_to_list( open( self.pdb, 'rt' ) )
         except:
             raise ValueError( 'Invalid input PDB file.' )
 
+        # identify residues in the input pdb that are near the input coordinates
         try:
             nearby_res_from_coord = self.find_nearby_residues( pdb_list )
         except:
             raise ValueError( 'Please clean input PDB file (e.g. amino acid index numbering).' )
 
+        # loop through every line in the input pdb and only show residues previously identified
         with open( self.pdb, 'r' ) as pdb_handle:
             for line in pdb_handle:
+
                 if self.show_line( line, nearby_res_from_coord ):
                     print( line.strip() )
                 else:
@@ -58,6 +62,7 @@ class pdb_sphere_neighbors( object ):
         residue_count = -1
         previous_number = 0
 
+        # run through every line in the pdb and parse it into a list if it is a heavy atom
         for line in pdb_handle:
             if line[0:4] == 'ATOM' and not line[13] == 'H':
                 residue_number = int( line[23:26] )
@@ -98,7 +103,9 @@ class pdb_sphere_neighbors( object ):
 
         shortest_distance = sys.maxsize
 
+        # find all distances between an input atom and input XYZ that are within threshold
         for idx in range( len( pdb_list[res_index] ) ):
+
             x1 = float( pdb_list[res_index][idx][3] )
             y1 = float( pdb_list[res_index][idx][4] )
             z1 = float( pdb_list[res_index][idx][5] )
@@ -108,6 +115,7 @@ class pdb_sphere_neighbors( object ):
             z2 = float( self.zcoord )
 
             distance = math.sqrt( (x1-x2)**2 + (y1-y2)**2 + (z1-z2)**2 )
+
             if distance < shortest_distance:
                 shortest_distance = distance
 
@@ -118,11 +126,13 @@ class pdb_sphere_neighbors( object ):
         """Find and return matches according to input option flags."""
 
         if in_line[0:4] == 'ATOM':
+
             aa_idx = int( in_line[23:26] )
             if aa_idx in idx_list:
                 return in_line
             else:
                 pass # residue index not in specified list
+
         else:
             pass # not an ATOM coordinate line
         
