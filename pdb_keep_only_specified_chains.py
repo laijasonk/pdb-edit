@@ -15,6 +15,7 @@ class pdb_keep_only_specified_chains( object ):
 
         self.pdb = args.pdb if args is not None else None
         self.chains = args.chains if args is not None else None
+        
         return
 
     def run( self ):
@@ -26,8 +27,10 @@ class pdb_keep_only_specified_chains( object ):
         if self.chains is None:
             raise ValueError( 'Missing input chain identifiers.' )
 
+        # loop through every line of input pdb and keep only lines with specified chain identifiers
         with open( self.pdb, 'r' ) as pdb_handle:
             for line in pdb_handle:
+
                 if line[0:4] == 'ATOM' or line[0:6] == 'HETATM' or line[0:3] == 'TER':
                     if self.line_contains_chain( line, self.chains ):
                         print( line.strip() )
@@ -46,10 +49,12 @@ class pdb_keep_only_specified_chains( object ):
             # standard PDB syntax has the chain on column 22 (21 when index starts at 0)
             for chain in in_chains:
                 if len( in_line ) > 21:
+
                     if in_line[21] == chain:
                         return True
                     else:
                         pass # did not contain correct chain identifier
+
                 else:
                     pass # ignore if line isn't even 21 characters long
         except:

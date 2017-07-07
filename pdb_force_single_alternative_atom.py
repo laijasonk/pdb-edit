@@ -14,6 +14,7 @@ class pdb_force_single_alternative_atom( object ):
         """The class constructor."""
 
         self.pdb = args.pdb if args is not None else None
+
         return
 
     def run( self ):
@@ -23,9 +24,11 @@ class pdb_force_single_alternative_atom( object ):
         if self.pdb is None:
             raise ValueError( 'Missing input PDB.' )
 
+        # loop through every line of input PDB and identify and fix alternative atom lines
         prev_aa_line = '' # track previous line to identify repeat atoms
         with open( self.pdb, 'r' ) as pdb_handle:
             for line in pdb_handle:
+
                 if line[0:4] == 'ATOM' or line[0:6] == 'HETATM':
                     new_line = self.keep_repeat_atom_line( line, prev_aa_line )
                     if new_line:
@@ -34,6 +37,7 @@ class pdb_force_single_alternative_atom( object ):
                         pass # do not keep this repeat atom line
                 else:
                     print( line.strip() ) # script keeps all other lines intact
+
                 prev_aa_line = line
 
         return
@@ -49,8 +53,9 @@ class pdb_force_single_alternative_atom( object ):
             elif in_line[13:16] == prev_line[13:16] and in_line[16] != ' ' and in_line[16] != 'A':
                 return False # found a repeat atom, so ignore it
             else:
-                out_line = out_line[:16] + ' ' + out_line[17:] # remove unnecessary A/B/C/etc at column 17
-                out_line = out_line[:26] + ' ' + out_line[27:] # remove unnecessary A/B/C/etc at column 27
+                # remove unnecessary A/B/C/etc at columns 17 aad 27
+                out_line = out_line[:16] + ' ' + out_line[17:]
+                out_line = out_line[:26] + ' ' + out_line[27:]
         except:
             raise ValueError( 'Incomplete ATOM or HETATM line.' )
         
