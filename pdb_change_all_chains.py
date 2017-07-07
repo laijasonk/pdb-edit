@@ -8,8 +8,11 @@ __author__ = 'Jason K Lai'
 __contact__ = 'http://www.jasonlai.com/'
 
 class pdb_change_all_chains( object ):
+
     def __init__( self, args=None ):
+
         """The class constructor."""
+
         self.pdb = args.pdb if args is not None else None
         self.chain = args.chain if args is not None else None
         return

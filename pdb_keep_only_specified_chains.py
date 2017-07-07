@@ -8,14 +8,19 @@ __author__ = 'Jason K Lai'
 __contact__ = 'http://www.jasonlai.com/'
 
 class pdb_keep_only_specified_chains( object ):
+
     def __init__( self, args=None ):
+
         """The class constructor."""
+
         self.pdb = args.pdb if args is not None else None
         self.chains = args.chains if args is not None else None
         return
 
     def run( self ):
+
         """The main function."""
+
         if self.pdb is None:
             raise ValueError( 'Missing input PDB.' )
         if self.chains is None:
@@ -34,7 +39,9 @@ class pdb_keep_only_specified_chains( object ):
         return 
     
     def line_contains_chain( self, in_line, in_chains ):
+
         """Check if the input line contains the specified chain(s)."""
+
         try:
             # standard PDB syntax has the chain on column 22 (21 when index starts at 0)
             for chain in in_chains:
@@ -51,6 +58,7 @@ class pdb_keep_only_specified_chains( object ):
         return False
     
 if __name__ == '__main__':
+
     parser = argparse.ArgumentParser( description=__doc__ )
 
     # command line option flags

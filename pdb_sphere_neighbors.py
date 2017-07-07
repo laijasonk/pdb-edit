@@ -8,6 +8,7 @@ __author__ = 'Jason K Lai'
 __contact__ = 'http://www.jasonlai.com/'
 
 class pdb_sphere_neighbors( object ):
+
     def __init__( self, args=None ):
 
         """The class constructor."""
@@ -128,6 +129,7 @@ class pdb_sphere_neighbors( object ):
         return False
     
 if __name__ == '__main__':
+
     parser = argparse.ArgumentParser( description=__doc__ )
 
     # command line option flags

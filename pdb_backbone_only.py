@@ -8,8 +8,11 @@ __author__ = 'Jason K Lai'
 __contact__ = 'http://www.jasonlai.com/'
 
 class pdb_backbone_only( object ):
+
     def __init__( self, args=None ):
+
         """The class constructor."""
+
         self.pdb = args.pdb if args is not None else None
         self.show_hydrogen = args.showHydrogen if args is not None else None
         self.show_cbeta = args.showCbeta if args is not None else None
@@ -18,7 +21,9 @@ class pdb_backbone_only( object ):
         return
 
     def run( self ):
+
         """The main function."""
+
         if self.pdb is None:
             raise ValueError( 'Missing input PDB.' )
         if self.show_hydrogen is None: self.show_hydrogen = False
@@ -37,6 +42,7 @@ class pdb_backbone_only( object ):
         return 
 
     def show_line( self, in_line ):
+
         """Find and return matches according to input option flags."""
 
         # common lists to filter lines (e.g. backbone heavy atoms, backbone hydrogens)
@@ -63,6 +69,7 @@ class pdb_backbone_only( object ):
         return False
     
 if __name__ == '__main__':
+
     parser = argparse.ArgumentParser( description=__doc__ )
 
     # command line option flags

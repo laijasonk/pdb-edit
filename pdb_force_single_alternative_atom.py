@@ -8,13 +8,18 @@ __author__ = 'Jason K Lai'
 __contact__ = 'http://www.jasonlai.com/'
 
 class pdb_force_single_alternative_atom( object ):
+
     def __init__( self, args=None ):
+
         """The class constructor."""
+
         self.pdb = args.pdb if args is not None else None
         return
 
     def run( self ):
+
         """The main function."""
+
         if self.pdb is None:
             raise ValueError( 'Missing input PDB.' )
 
@@ -34,7 +39,9 @@ class pdb_force_single_alternative_atom( object ):
         return
 
     def keep_repeat_atom_line( self, in_line, prev_line ):
+
         """Return cleaned atom lines otherwise return false"""
+
         out_line = in_line
         try:
             if in_line[26] != ' ': 
@@ -50,6 +57,7 @@ class pdb_force_single_alternative_atom( object ):
         return out_line
     
 if __name__ == '__main__':
+
     parser = argparse.ArgumentParser( description=__doc__ )
 
     # command line option flags
