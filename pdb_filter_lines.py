@@ -21,6 +21,7 @@ class pdb_filter_lines( object ):
         self.end = args.end if args is not None else None
         self.model = args.model if args is not None else None
         self.water = args.water if args is not None else None
+        self.x00 = args.x00 if args is not None else None
 
         return
 
@@ -75,6 +76,8 @@ class pdb_filter_lines( object ):
             return in_line
         elif self.water and in_line[17:20] in water_list:
             return in_line
+        elif self.x00 and in_line[17:20] == 'X00':
+            return in_line
         else:
             return False # do not show non-matching lines
     
@@ -91,6 +94,7 @@ if __name__ == '__main__':
     parser.add_argument( '-e', '--end', dest='end', required=False, help='show END lines', default=False, action='store_true' )
     parser.add_argument( '-m', '--model', dest='model', required=False, help='show MODEL lines', default=False, action='store_true' )
     parser.add_argument( '-w', '--water', dest='water', required=False, help='show water lines', default=False, action='store_true' )
+    parser.add_argument( '-x', '--x00', dest='x00', required=False, help='show X00 ligand lines', default=False, action='store_true' )
 
     # command line execution
     main = pdb_filter_lines( args=parser.parse_args() )
