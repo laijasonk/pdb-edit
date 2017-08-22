@@ -29,7 +29,7 @@ class pdb_force_single_alternative_atom( object ):
         with open( self.pdb, 'r' ) as pdb_handle:
             for line in pdb_handle:
 
-                if line[0:4] == 'ATOM' or line[0:6] == 'HETATM':
+                if line[0:4] == 'ATOM' or line[0:6] == 'HETATM' or line[0:6] == 'ANISOU':
                     new_line = self.keep_repeat_atom_line( line, prev_aa_line )
                     if new_line:
                         print( new_line.strip() )
