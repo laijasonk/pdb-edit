@@ -5,7 +5,7 @@
 import argparse
 
 __author__ = 'Jason K Lai'
-__contact__ = 'http://www.jasonlai.com/'
+__contact__ = 'http://www.github.com/jklai'
 
 class pdb_keep_only_specified_chains( object ):
 

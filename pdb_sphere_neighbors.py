@@ -5,7 +5,7 @@
 import argparse, sys, math
 
 __author__ = 'Jason K Lai'
-__contact__ = 'http://www.jasonlai.com/'
+__contact__ = 'http://www.github.com/jklai'
 
 class pdb_sphere_neighbors( object ):
 
